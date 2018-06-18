@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}UFEE | {% if data %}{{ data[0][0] }}{% else %}new coffee{% endif %}{% endblock %}
+{% block body %}
+    {% include 'header.html' %}
+    <section class="o-row o-row--lg">
+        <div class="o-container o-layout o-layout--justify-center">
+            <form method="post" action="{{ url_for('alarm', alarm_id=data[0] or "-1") }}"
+                  class="o-layout o-layout--justify-center c-alarm u-bg-white u-5-of-6-bp3 u-mb-xl u-bs-subtle">
+                <input class="hidden" type="text" name="alarm_id" value="{{ data[0] or "-1" }}">
+                <div class="o-layout o-layout__item o-layout--justify-space-between o-layout--align-center u-ps-lg u-mb-md">
+                    <div class="o-layout o-layout--align-center">
+                        <input class="u-text-align-center c-alarm__time" type="text" name="hour"
+                               value="{{ data[1] or "00" }}">
+                        <span>:</span>
+                        <input class="u-text-align-center c-alarm__time" type="text" name="minutes"
+                               value="{{ data[2] or "00" }}">
+                    </div>
+                    <button class="o-button-reset c-link-cta" name="action" value="save">SAVE</button>
+                </div>
+                <div class="o-layout o-layout__item o-layout--justify-center u-mb-md">
+                    <div class="o-layout o-layout__item o-layout--justify-space-between">
+                        <div class="o-layout o-layout__item o-layout--align-center u-mb-md">
+                            <svg class="c-icon c-icon--sm u-ps-lg" xmlns="http://www.w3.org/2000/svg" width="24"
+                                 height="24" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none"/>
+                                <path fill="#a1ce69"
+                                      d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/>
+                            </svg>
+                            <div class="c-dropdown">
+                                <select name="song_id" class="c-dropdown__item u-text-align-center">
+                                    {% for s in songs %}
+                                        <option value="{{ s[0] }}"
+                                                {% if s[0] == data[4] %}selected="selected"{% endif %}>{{ s[1] }}
+                                            - {{ s[2] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="o-layout o-layout__item o-layout--align-center u-mb-xl">
+                            <svg class="c-icon c-icon--sm u-ps-lg" xmlns="http://www.w3.org/2000/svg" width="24"
+                                 height="24" viewBox="0 0 24 24">
+                                <path fill="none" d="M0 0h24v24H0V0z"/>
+                                <path fill="#a1ce69"
+                                      d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.9 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+                            </svg>
+                            <div class="c-dropdown">
+                                <select name="coffee_id" class="c-dropdown__item u-text-align-center">
+                                    {% for c in coffees %}
+                                        <option value="{{ c[0] }}"
+                                                {% if c[0] == data[5] %}selected="selected"{% endif %}>{{ c[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="o-layout o-layout__item o-layout--justify-space-around u-mb-md {% if data == [] %}hidden{% endif %}">
+                        {% for val in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] %}
+                            <button name="action" value="{{ loop.index }}"
+                                    class="o-button-reset c-alarm__day {% if loop.index in days %}c-alarm__day--active{% endif %}">{{ val }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script>
+        {
+            const print = o => console.log(o);
+
+            const updateWater = water => {
+                const value = water.value;
+                document.querySelector(`.js-water-label`).innerText = `${value}ml`;
+            };
+
+            const updateCoffee = coffee => {
+                const value = coffee.value;
+                const unit = value === 1 ? `scoop` : `scoops`;
+                document.querySelector(`.js-coffee-label`).innerText = `${value} ${unit}`;
+            };
+
+            const init = () => {
+                const water = document.querySelector(`.js-water-value`);
+                const coffee = document.querySelector(`.js-coffee-value`);
+
+                water.oninput = () => {
+                    print(`water changed`);
+                    updateWater(water)
+                };
+
+                coffee.oninput = () => {
+                    print(`coffee changed`);
+                    updateCoffee(coffee)
+                };
+            };
+
+            init();
+        }
+    </script>
+{% endblock %}

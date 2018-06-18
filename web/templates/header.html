@@ -1,0 +1,72 @@
+<header class="o-row o-row--header o-row--neutral-xx-dark">
+    <div class="o-container o-container--lg">
+        <div class="c-header o-layout o-layout--justify-space-between o-layout--align-center">
+            <h1 class="c-logo">
+                <a class="c-logo" href="{{ url_for('index') }}">
+                    <svg class="c-logo__symbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 326.26 323.95">
+                        <defs>
+                            <style>.cls-h1, .cls-h2 {
+                                fill: #fbfcfa;
+                            }
+
+                            .cls-h2 {
+                                font-size: 175.79px;
+                                font-family: HKGrotesk-SemiBoldItalic, HK Grotesk;
+                                font-weight: 700;
+                                font-style: italic;
+                                letter-spacing: 0.02em;
+                            }
+
+                            .cls-h3 {
+                                letter-spacing: -0.02em;
+                            }
+                            </style>
+                        </defs>
+                        <title>Asset 4</title>
+                        <g id="Layer_2" data-name="Layer 2">
+                            <g id="Layer_1-2" data-name="Layer 1">
+                                <path class="cls-h1"
+                                      d="M149.64,19.37C142.91,22.6,94.33,28.44,93,114.16s41.82,41.25,8,160.16c-8.66,30.47,59.07-69.3,45.75-103.59s-11-41.44,16.23-51.43c93.3-34.29,24-42.86-10.66-25.71s-40-20.58,69.3-77.15C235.21,9.4,228.28-18.35,149.64,19.37Z"/>
+                                <text class="cls-h2" transform="translate(0 279.31)">u
+                                    <tspan class="cls-h3" x="101.88" y="0"></tspan>
+                                    <tspan x="141.54" y="0">ee</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </svg>
+                </a>
+            </h1>
+            <div class="c-header__nav">
+                <nav class="c-nav">
+                    <ul class="o-list c-nav__list">
+                        <li class="c-nav__item"><a class="c-nav__link" href="{{ url_for('coffees') }}">Coffees</a></li>
+                        <li class="c-nav__item"><a class="c-nav__link" href="{{ url_for('alarms') }}">Alarms</a></li>
+                        <li class="c-nav__item"><a class="c-nav__link"
+                                                   href="{{ url_for('profile') }}">{{ session['username'] }}</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="c-header__mobile-nav-trigger">
+                <div class="c-burger js-burger js-toggle-nav">
+                    <div class="c-burger__element c-burger__element-1"></div>
+                    <div class="c-burger__element c-burger__element-2"></div>
+                    <div class="c-burger__element c-burger__element-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <aside class="c-mobile-nav js-mobile-nav">
+        <div class="c-mobile-nav__body">
+            <div class="c-mobile-nav__nav">
+                <nav class="c-nav">
+                    <ul class="o-list c-nav__list">
+                        <li class="c-nav__item"><a class="c-nav__link" href="{{ url_for('coffees') }}">Coffees</a></li>
+                        <li class="c-nav__item"><a class="c-nav__link" href="{{ url_for('alarms') }}">Alarms</a></li>
+                        <li class="c-nav__item"><a class="c-nav__link"
+                                                   href="{{ url_for('profile') }}">{{ session['username'] }}</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </aside>
+</header>

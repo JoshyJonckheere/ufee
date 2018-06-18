@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% block title %} UFEE | HOME {% endblock %}
+{% block body %}
+    {% include 'header.html' %}
+    <main>
+        <section class="o-row o-row--lg">
+            <div class="o-container">
+                <div class="o-layout">
+                    <form method="post" action="{{ url_for('brew') }}"
+                          class="o-layout__item o-layout--justify-start o-layout--align-center u-text-align-center u-td-bold u-fz-23px">
+                        <div class="o-layout o-layout--justify-center c-icon  u-mb-sm">
+                            {% if ready %}
+                                <svg class="o-layout__item c-icon__symbol" xmlns="http://www.w3.org/2000/svg" width="48"
+                                     height="48" viewBox="0 0 24 24">
+                                    <path fill="None" d="M0 0h24v24H0V0zm0 0h24v24H0V0z"/>
+                                    <path fill="#A1CE69"
+                                          d="M16.59 7.58L10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                                </svg>
+                            {% else %}
+                                <svg class="o-layout__item c-icon__symbol" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+                                          fill="#ED4E4E"/>
+                                    <path d="M0 0h24v24H0z" fill="None"/>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <div class="o-layout__item u-mb-sm">
+                            <span>{{ message }}</span>
+                        </div>
+                        <div class="o-layout__item u-mb-md">
+                            <span class="o-layout o-layout__item o-layout--justify-center">
+                                <span class="o-layout__item u-width-auto-bp3">let's make a</span>
+                                <div class="o-layout__item c-dropdown u-1-of-2-bp3">
+                                    <select class="c-dropdown__item" name="coffee" id="coffee">
+                                        {% for line in data %}
+                                            <option value={{ line[0] }}>{{ line[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="o-layout__item u-mb-sm">
+                            <button class="o-button-reset c-link-cta c-link-cta--xl u-bs-subtle">
+                                BREW
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="o-row o-row--lg">
+            <div class="o-container">
+                <div class="o-layout">
+                    <h2 class="o-layout__item u-td-caps u-mb-sm">Statistics</h2>
+                    <div class="o-layout__item u-bg-white u-bs-subtle u-mb-xl">
+                        <span class="o-layout o-layout__item c-canvas__label">Cups made (last 7 days)</span>
+                        <div class="o-layout o-layout__item o-layout--justify-center c-canvas">
+                            <canvas class="js-chart-cups" height="220"></canvas>
+                        </div>
+                    </div>
+                    <div class="o-layout o-layout__item u-bg-white u-bs-subtle">
+                        <span class="o-layout o-layout__item c-canvas__label">Top 3 coffees</span>
+                        <div class="o-layout o-layout__item o-layout--justify-space-around c-canvas u-mb-md">
+                            <canvas class="js-chart-top3 u-1-of-3-bp3 u-mb-md" height="220"></canvas>
+                            <canvas class="js-chart-top3 u-1-of-3-bp3 u-mb-md" height="220"></canvas>
+                            <canvas class="js-chart-top3 u-1-of-3-bp3 u-mb-md" height="220"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="o-row">
+        <div class="o-container">
+
+        </div>
+    </footer>
+    <script>
+        {
+            let canvas, ctx, width, height;
+
+            const print = o => console.log(o);
+
+            const getRadians = deg => (deg / 360) * (Math.PI * 2);
+
+            const drawBarGraph = (color, dateVals, nodeWidth, scale, gutter) => {
+                    let amount = 0;
+                    let max = 0;
+                    // iterate to count values and get max value
+                    for (const i in dateVals) {
+                        amount++;
+                        dateVals[i][1] > max ? max = dateVals[i][1] : max = max;
+                    }
+                    // set width and height of canvas element based on content
+                    width = canvas.width = (amount * nodeWidth) + ((amount - 1) * gutter) + nodeWidth;
+                    height = canvas.height = (max * scale) + 16;
+                    // Change gutter beween graph nodes on breakpoint
+                    if (window.innerWidth <= 730) {
+                        gutter = gutter / 8 * 3;
+                        nodeWidth = nodeWidth / 2;
+                    }
+                    // set added x-value (after every iteration)
+                    let val = ((amount / 2) * (nodeWidth + gutter)) * -1;
+                    // clear the rectangle (necessary in case of a resize)
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // draw graph
+                    ctx.beginPath();
+                    for (const i in dateVals) {
+                        // GRAPH (RECT)
+                        ctx.fillStyle = color;
+                        const dateVal = dateVals[i];
+                        print(dateVal[1]);
+                        const nodeHeight = dateVal[1] * scale;
+                        const xval = (width / 2) + (nodeWidth / 2) + val;
+                        ctx.fillRect(xval, height - nodeHeight - 16, nodeWidth, nodeHeight);
+                        val += nodeWidth + gutter;
+                        // VALUE IN GRAPH
+                        ctx.fillStyle = `#F5F7F2`;
+                        ctx.textAlign = `center`;
+                        ctx.font = `23px HK Grotesk`;
+                        ctx.fillText(String(dateVal[1]), xval + (nodeWidth / 2), height - 24);
+                        // DATE UNDER GRAPH
+                        ctx.fillStyle = `#31332F`;
+                        ctx.textAlign = `center`;
+                        ctx.font = `12px HK Grotesk`;
+                        ctx.fillText(String(dateVal[0]).substring(0, 5), xval + (nodeWidth / 2), height)
+                    }
+                }
+            ;
+
+            const drawCircleGraph = (color, keyValue, radius, borderwidth) =>
+            {
+                width = canvas.width = (radius * 2) + (borderwidth * 2) + 23 + 16;
+                height = canvas.height = width;
+                // GRAPH (ARC)
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2, radius - 7, 0, 2 * Math.PI);
+                ctx.lineWidth = borderwidth;
+                ctx.strokeStyle = `#F5F7F2`;
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2, radius, -0.5 * Math.PI, getRadians(keyValue[1] * 3.6) - .5 * Math.PI);
+                ctx.lineWidth = borderwidth;
+                ctx.strokeStyle = color;
+                ctx.stroke();
+                ctx.beginPath();
+                const valString = `${Math.round(keyValue[1])}%`;
+                const coffeeString = keyValue[0];
+                // LABELS
+                ctx.fillStyle = `#31332F`;
+                ctx.textAlign = `center`;
+                ctx.font = `23px HK Grotesk`;
+                ctx.fillText(valString, width / 2, height / 2);
+                ctx.fillText(coffeeString, width / 2, height / 2 + radius + borderwidth + 8);
+            }
+            ;
+
+            const initBarGraph = (color, dateVals, nodeWidth, scale, gutter) => {
+                    canvas = document.querySelector(`.js-chart-cups`);
+                    ctx = canvas.getContext(`2d`);
+                    drawBarGraph(color, dateVals, nodeWidth, scale, gutter);
+                }
+            ;
+
+            const initCircleGraph = (colors, vals, labels, radius, strokewidth) => {
+                    cvs = document.querySelectorAll(`.js-chart-top3`);
+                    for (const [i, cnv] of cvs.entries()) {
+                        createCanvas(cnv);
+                        drawCircleGraph(colors[i], [labels[i], vals[i]], radius, strokewidth);
+                    }
+                }
+            ;
+
+            const createCanvas = cnv => {
+                    canvas = cnv;
+                    ctx = canvas.getContext(`2d`);
+                    width = canvas.width;
+                    height = canvas.height;
+                }
+            ;
+
+            const init = () => {
+                    const colors = [`#91BA5F`, `#A1CE69`, `#B4E07E`];
+                    let vals = "";
+                    vals = {{ top_three_values | safe }};
+                    let coffees = "";
+                    coffees = {{ top_three_labels | safe }};
+                    let dateCoffees = "";
+                    dateCoffees = {{ history_overview | safe }};
+                    // color | values | labels | radius | strokeWidth
+                    initCircleGraph(colors, vals, coffees, 88, 15);
+                    // color | dateVals | nodeWidth | scale (height for a val of 1) | gutter
+                    initBarGraph(colors[0], dateCoffees, 32, 32, 64);
+
+                    window.onresize = () => {
+                        initBarGraph(colors[0], dateCoffees, 32, 32, 64);
+                    }
+                }
+            ;
+            window.addEventListener(`load`, init);
+        }
+    </script>
+{% endblock %}

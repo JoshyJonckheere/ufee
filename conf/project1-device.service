@@ -1,0 +1,14 @@
+[Unit]
+Description=Project 1 device service
+After=network.target
+BindsTo=mysqld.service
+After=mysqld.service
+
+[Service]
+User=joshy
+Group=joshy
+WorkingDirectory=/home/joshy/project1/sensor
+ExecStart=/home/joshy/project1/env/bin/python /home/joshy/project1/sensor/main.py
+
+[Install]
+WantedBy=multi-user.target

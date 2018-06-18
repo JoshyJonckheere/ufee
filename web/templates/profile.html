@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}UFEE | {{ session['username'] }}{% endblock %}
+{% block body %}
+    {% include 'header.html' %}
+    <section class="o-row">
+        <div class="o-container o-container--md o-layout o-layout--justify-center">
+            <h2 class="o-layout__item u-mb-xl u-text-align-center">Change password</h2>
+            <div class="o-layout o-layout--justify-center o-layout--align-center u-2-of-3-bp4 u-width-auto">
+                <form class="o-layout o-layout-align-center c-auth-form" action="/profile" method="post">
+                    <input class="o-layout__item c-auth-form__item c-auth-form__text c-auth-form__text--dark u-mb-lg"
+                           type="password"
+                           name="password-old"
+                           title="password-old" placeholder="Old Password">
+                    <input class="o-layout__item c-auth-form__item c-auth-form__text c-auth-form__text--dark u-mb-lg"
+                           type="password"
+                           name="password"
+                           title="password" placeholder="New Password">
+                    <input class="o-layout__item c-auth-form__item c-auth-form__text c-auth-form__text--dark u-mb-lg"
+                           type="password"
+                           name="password-repeat" title="password-repeat" placeholder="Repeat New Password">
+                    <button class="o-layout__item o-button-reset c-auth-form__item c-link-cta c-link-cta--xl u-mb-sm">
+                        CHANGE PASSWORD
+                    </button>
+                    <span class="c-error">{{ error }}</span>
+                    <span class="c-message">{{ message }}</span>
+                </form>
+                <div class="o-layout o-layout__item o-layout--justify-end">
+                    <a class="c-error" href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
